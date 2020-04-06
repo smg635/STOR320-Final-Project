@@ -23,8 +23,8 @@ library(readr)
 OnlineNewsPopularity <- rbind(read_csv("data/OnlineNewsPopularity/OnlineNewsPopularityTraining.csv"), read_csv("data/OnlineNewsPopularity/OnlineNewsPopularityTest.csv"))
 
 # All the news from https://www.kaggle.com/snapcrack/all-the-news. ** COMMENT LINE 26 AND UNCOMMENT LINE 27 TO ADD ARTICLES3
-AllTheNews <- rbind(read_csv("data/all-the-news/articles1withsentiment.csv"), read_csv("data/all-the-news/articles2withsentiment.csv"))
-# AllTheNews <- rbind(read_csv("data/all-the-news/articles1withsentiment.csv"), read_csv("data/all-the-news/articles2withsentiment.csv"), read_csv("data/all-the-news/articles3withsentiment.csv"))
+# AllTheNews <- rbind(read_csv("data/all-the-news/articles1withsentiment.csv"), read_csv("data/all-the-news/articles2withsentiment.csv"))
+AllTheNews <- rbind(read_csv("data/all-the-news/articles1withsentiment.csv"), read_csv("data/all-the-news/articles2withsentiment.csv"), read_csv("data/all-the-news/articles3withsentiment.csv"))
 
 # All the news from https://www.kaggle.com/uciml/news-aggregator-dataset
 NewsAggregatorDataset <- read_csv("data/news-aggregator-dataset.csv")
@@ -39,9 +39,25 @@ head(NewsAggregatorDataset)
 ```
 
 ```{r}
+colnames(OnlineNewsPopularity)
+```
+```{r}
+colnames(AllTheNews)
+```
+
+```{r}
+colnames(NewsAggregatorDataset)
+```
+
+```{r}
 # Remove the 22 NA rows from OnlineNewsPopularity
 
 sum(is.na(OnlineNewsPopularity$text) == TRUE)
 OnlineNewsPopularity <- filter(OnlineNewsPopularity, is.na(OnlineNewsPopularity$text) == FALSE)
 sum(is.na(OnlineNewsPopularity$text) == TRUE)
 ```
+
+```{r}
+sum(is.na(AllTheNews$url) == TRUE)
+```
+
