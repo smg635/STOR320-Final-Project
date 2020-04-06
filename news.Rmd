@@ -43,6 +43,7 @@ head(NewsAggregatorDataset)
 colnames(OnlineNewsPopularity)
 ```
 ```{r}
+AllTheNews <- AllTheNews %>% select(1:month, day, day_of_week, url:polarity)
 colnames(AllTheNews)
 ```
 
