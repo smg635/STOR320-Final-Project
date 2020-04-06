@@ -1,0 +1,27 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(readr) 
+library(dplyr)
+
+news <- read.csv("../../data/all-the-news/articles1.csv")
+news1 <- read.csv("../../data/all-the-news/articles2.csv")
+news2 <- read.csv("../../data/all-the-news/articles3.csv")
+news <- rbind( news, news1, news2)
+
+news$date <- as.Date(news$date)
+news$day <- as.numeric(format(news$date, format = "%d"))
+news$month <- as.numeric(format(news$date, format = "%m"))
+news$day=factor(news$day)
+news$month=factor(news$month)
+news$year=factor(news$year)
+```
+
+```{r}
+write.csv(news, "../../data//all-the-news/all-the-news.csv", row.names = TRUE)
+```
+
+
