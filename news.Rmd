@@ -9,22 +9,20 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r, include=FALSE}
+```{r, include=FALSE, warning=FALSE}
 set.seed(1337)
 library(tidyverse)
 library(dplyr)
 library(readr)
 ```
 
-```{r, cache=TRUE, message=FALSE}
+```{r, cache=TRUE, message=FALSE, warning=FALSE}
 # Read the datasets we specified
 
 # Online News Popularity from https://archive.ics.uci.edu/ml/datasets/Online+News+Popularity
 OnlineNewsPopularity <- rbind(read_csv("data/OnlineNewsPopularity/OnlineNewsPopularityTraining.csv"), read_csv("data/OnlineNewsPopularity/OnlineNewsPopularityTest.csv"))
 
-# All the news from https://www.kaggle.com/snapcrack/all-the-news. ** COMMENT LINE 26 AND UNCOMMENT LINE 27 TO ADD ARTICLES3
-# AllTheNews <- rbind(read_csv("data/all-the-news/articles1.csv"), read_csv("data/all-the-news/articles2.csv"))
-# AllTheNews <- rbind(read_csv("data/all-the-news/articles1.csv"), read_csv("data/all-the-news/articles2.csv"), read_csv("data/all-the-news/articles3.csv"))
+# All the news from https://www.kaggle.com/snapcrack/all-the-news
 AllTheNews <- read_csv("data/all-the-news/all-the-news.csv")
 
 # All the news from https://www.kaggle.com/uciml/news-aggregator-dataset
@@ -43,7 +41,7 @@ head(NewsAggregatorDataset)
 colnames(OnlineNewsPopularity)
 ```
 ```{r}
-AllTheNews <- AllTheNews %>% select(1:month, day, day_of_week, url:polarity)
+AllTheNews <- AllTheNews %>% select(1:month, day, day_of_week, url:polarity) # Switches order of columns
 colnames(AllTheNews)
 ```
 
@@ -66,3 +64,8 @@ nrow(filter(AllTheNews, AllTheNews$day_of_week == -1))
 AllTheNews <- filter(AllTheNews, AllTheNews$day_of_week != -1)
 nrow(filter(AllTheNews, AllTheNews$day_of_week == -1))
 ```
+### Make changes to OnlineNewsPopularity to prepare it to be combined with the others
+```{r}
+OnlineNewsPopularity$day_of_week = 0 * OnlineNewsPopularity$weekday_is_monday + 1 * OnlineNewsPopularity$weekday_is_tuesday + 2 * OnlineNewsPopularity$weekday_is_wednesday + 3 * OnlineNewsPopularity$weekday_is_thursday + 4 * OnlineNewsPopularity$weekday_is_friday + 5 * OnlineNewsPopularity$weekday_is_saturday + 6 * OnlineNewsPopularity$weekday_is_sunday
+```
+
