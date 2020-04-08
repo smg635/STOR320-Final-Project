@@ -37,11 +37,10 @@ head(AllTheNews)
 head(NewsAggregatorDataset)
 ```
 
+
 ```{r}
-colnames(OnlineNewsPopularity)
-```
-```{r}
-AllTheNews <- AllTheNews %>% select(1:month, day, day_of_week, url:polarity) # Switches order of columns
+# AllTheNews <- AllTheNews %>% select(1:month, day, day_of_week, url:polarity) # Switches order of columns
+AllTheNews <- rename(AllTheNews, text = content)
 colnames(AllTheNews)
 ```
 
@@ -49,13 +48,15 @@ colnames(AllTheNews)
 colnames(NewsAggregatorDataset)
 ```
 
-### Filter the rows in *OnlineNewsPopularity* where there was an error getting the text.
+### Filter the rows in *OnlineNewsPopularity* where there was an error getting the text and rename the subjectivity and polarity columns
 ```{r}
 # Remove the 22 NA rows from OnlineNewsPopularity
 
 sum(is.na(OnlineNewsPopularity$text) == TRUE)
 OnlineNewsPopularity <- filter(OnlineNewsPopularity, is.na(OnlineNewsPopularity$text) == FALSE)
 sum(is.na(OnlineNewsPopularity$text) == TRUE)
+
+OnlineNewsPopularity <- rename(OnlineNewsPopularity, subjectivity = global_subjectivity, polarity = global_sentiment_polarity)
 ```
 
 ### Filter out the rows where date had an issue being parsed, maybe fixable at a later date
@@ -64,8 +65,49 @@ nrow(filter(AllTheNews, AllTheNews$day_of_week == -1))
 AllTheNews <- filter(AllTheNews, AllTheNews$day_of_week != -1)
 nrow(filter(AllTheNews, AllTheNews$day_of_week == -1))
 ```
-### Make changes to OnlineNewsPopularity to prepare it to be combined with the others
+
+### Add columns for year, month, and day and format date columns as date
 ```{r}
-OnlineNewsPopularity$day_of_week = 0 * OnlineNewsPopularity$weekday_is_monday + 1 * OnlineNewsPopularity$weekday_is_tuesday + 2 * OnlineNewsPopularity$weekday_is_wednesday + 3 * OnlineNewsPopularity$weekday_is_thursday + 4 * OnlineNewsPopularity$weekday_is_friday + 5 * OnlineNewsPopularity$weekday_is_saturday + 6 * OnlineNewsPopularity$weekday_is_sunday
+AllTheNews$date <- as.Date(AllTheNews$date)
+NewsAggregatorDataset$date <- as.Date(NewsAggregatorDataset$date)
+OnlineNewsPopularity$date <- as.Date(OnlineNewsPopularity$date)
+
+NewsAggregatorDataset$day <- as.numeric(format(NewsAggregatorDataset$date, format = "%d"))
+NewsAggregatorDataset$month <- as.numeric(format(NewsAggregatorDataset$date, format = "%m"))
+NewsAggregatorDataset$year <- as.numeric(format(NewsAggregatorDataset$date, format = "%Y"))
+
+OnlineNewsPopularity$day <- as.numeric(format(OnlineNewsPopularity$date, format = "%d"))
+OnlineNewsPopularity$month <- as.numeric(format(OnlineNewsPopularity$date, format = "%m"))
+OnlineNewsPopularity$year <- as.numeric(format(OnlineNewsPopularity$date, format = "%Y"))
 ```
 
+```{r}
+colnames(AllTheNews)
+```
+
+```{r}
+colnames(OnlineNewsPopularity)
+```
+
+```{r}
+OnlineNewsPopularity$day_of_week <- 0 * OnlineNewsPopularity$weekday_is_monday + 1 * OnlineNewsPopularity$weekday_is_tuesday + 2 * OnlineNewsPopularity$weekday_is_wednesday + 3 * OnlineNewsPopularity$weekday_is_thursday + 4 * OnlineNewsPopularity$weekday_is_friday + 5 * OnlineNewsPopularity$weekday_is_saturday + 6 * OnlineNewsPopularity$weekday_is_sunday
+```
+
+```{r}
+NewsAggregatorDataset <- rename(NewsAggregatorDataset, id = ID, title = TITLE, url = URL, publisher = PUBLISHER, category = CATEGORY, story = STORY, hostname = HOSTNAME, timestamp = TIMESTAMP)
+
+NewsAggregatorDataset$text <- NA
+NewsAggregatorDataset$subjectivity <- NA
+NewsAggregatorDataset$polarity <- NA
+```
+
+
+```{r}
+AllTheNews <- select(AllTheNews, title, date, year, month, day, day_of_week, url, text, subjectivity, polarity)
+# OnlineNewsPopularity <- select(OnlineNewsPopularity, title, date, year, month, day, day_of_week, url, text, subjectivity, polarity)
+NewsAggregatorDataset <- select(NewsAggregatorDataset, title, date, year, month, day, day_of_week, url, text, subjectivity, polarity)
+```
+
+```{r}
+# news = rbind(AllTheNews, OnlineNewsPopularity, NewsAggregatorDataset)
+```

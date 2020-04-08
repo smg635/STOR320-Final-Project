@@ -29,8 +29,4 @@ news <- select(news, -1)
 write_csv(news, "../../data/all-the-news/all-the-news.csv")
 ```
 
-```{r}
-summary(news)
-```
-
 
