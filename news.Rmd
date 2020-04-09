@@ -20,13 +20,13 @@ library(readr)
 # Read the datasets we specified
 
 # Online News Popularity from https://archive.ics.uci.edu/ml/datasets/Online+News+Popularity
-OnlineNewsPopularity <- rbind(read_csv("data/OnlineNewsPopularity/OnlineNewsPopularityTraining.csv"), read_csv("data/OnlineNewsPopularity/OnlineNewsPopularityTest.csv"))
+OnlineNewsPopularity <- rbind(read_csv("C:/Users/smg635/Downloads/data/OnlineNewsPopularityTraining.csv"), read_csv("C:/Users/smg635/Downloads/data/OnlineNewsPopularityTest.csv"))
 
 # All the news from https://www.kaggle.com/snapcrack/all-the-news
-AllTheNews <- read_csv("data/all-the-news/all-the-news.csv")
+AllTheNews <- read_csv("C:/Users/smg635/Downloads/data/all-the-news.csv")
 
 # All the news from https://www.kaggle.com/uciml/news-aggregator-dataset
-NewsAggregatorDataset <- read_csv("data/news-aggregator-dataset.csv")
+NewsAggregatorDataset <- read_csv("C:/Users/smg635/Downloads/data/news-aggregator-dataset.csv")
 ```
 
 ```{r}
@@ -101,6 +101,11 @@ NewsAggregatorDataset$subjectivity <- NA
 NewsAggregatorDataset$polarity <- NA
 ```
 
+```{r}
+AllTheNews2 <- AllTheNews
+```
+
+
 
 ```{r}
 AllTheNews <- select(AllTheNews, title, date, year, month, day, day_of_week, url, text, subjectivity, polarity)
@@ -111,4 +116,29 @@ NewsAggregatorDataset <- select(NewsAggregatorDataset, title, date, year, month,
 ```{r}
 news = rbind(AllTheNews, OnlineNewsPopularity, NewsAggregatorDataset)
 #news = rbind(AllTheNews, OnlineNewsPopularity, NewsAggregatorDataset)
+```
+
+```{r}
+news <- mutate(news, numwords = map_int(str_split(text,boundary("word")),length),
+               lenwords = map(str_split(text,boundary("word")), ~ str_count(., "[A-z]")))
+```
+###Plot the length and number of words
+
+###Sets date variables as factors
+```{r}
+news$month <- as.factor(news$month)
+news$numwords <- as.numeric(news$numwords)
+news$day_of_week <- as.factor(news$day_of_week)
+news$year <- as.factor(news$year)
+```
+
+###Makes a version of news we can look at for number of words, as it excludes those with too few words
+```{r}
+news2 <- filter(news,(news$numwords >= 5) & (news$numwords <= 5000))
+```
+
+###Plotting the number of words by weekday, year, and month
+
+```{r}
+ggplot(news2,aes(x = year, y = numwords)) + geom_boxplot(fill = "lightsteelblue1")  + theme_bw()
 ```
