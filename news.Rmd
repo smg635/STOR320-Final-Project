@@ -104,10 +104,11 @@ NewsAggregatorDataset$polarity <- NA
 
 ```{r}
 AllTheNews <- select(AllTheNews, title, date, year, month, day, day_of_week, url, text, subjectivity, polarity)
-# OnlineNewsPopularity <- select(OnlineNewsPopularity, title, date, year, month, day, day_of_week, url, text, subjectivity, polarity)
+OnlineNewsPopularity <- select(OnlineNewsPopularity, title, date, year, month, day, day_of_week, url, text, subjectivity, polarity)
 NewsAggregatorDataset <- select(NewsAggregatorDataset, title, date, year, month, day, day_of_week, url, text, subjectivity, polarity)
 ```
 
 ```{r}
-# news = rbind(AllTheNews, OnlineNewsPopularity, NewsAggregatorDataset)
+news = rbind(AllTheNews, OnlineNewsPopularity, NewsAggregatorDataset)
+#news = rbind(AllTheNews, OnlineNewsPopularity, NewsAggregatorDataset)
 ```
